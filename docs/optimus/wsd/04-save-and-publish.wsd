@@ -1,0 +1,41 @@
+title Optimus - Save and Publish Version
+
+participant Initiator   as I
+participant Loader1     as L1
+participant Loader2     as L2
+participant API         as A
+
+
+alt "Wait for loads to complete and save"
+    L1-->I: <<load done>>
+    L2-->I: <<load done>>
+else "All loads completed successfully"
+    I->+A: POST /versions/:version/save
+    A->A: <<prepare save>>
+    A-->-I: 202 Accepted (loc: /versions/:version)
+    note left of I
+        version.status=SAVING
+    end note
+
+    loop "Until status=SAVED"
+        I->A: GET /versions/:version
+        A-->I: Version
+    end
+end
+
+alt "Publish saved Version"
+    I->+A: POST /versions/:version/publish
+    A->A: <<publish version>>
+    A-->-I: 202 Accepted (loc: /versions/:version)
+    note left of I
+        version.status=PUBLISHING
+    end note
+    
+
+    loop "Until status=PUBLISHED"
+        I->A: GET /versions/:version-id
+        A-->I: Version
+    end
+end
+
+

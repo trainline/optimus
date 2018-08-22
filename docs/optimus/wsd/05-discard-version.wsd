@@ -1,0 +1,16 @@
+title Optimus - Discard Version
+
+participant Initiator   as I
+participant Loader1     as L1
+participant Loader2     as L2
+participant API         as A
+
+
+alt "Wait for loads to complete"
+    L1-->I: <<load done>>
+    L2-->I: <<load failed>>
+else "One or more loads failed"
+    I->+A: POST /versions/:version/discard
+    A-->-I: 200 OK Version (status=DISCARDED)
+end
+

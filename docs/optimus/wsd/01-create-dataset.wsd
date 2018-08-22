@@ -1,0 +1,25 @@
+title Optimus - Dataset creation 
+
+participant Initiator   as I
+participant Loader      as L
+participant API         as A
+
+
+I->+A: POST /datasets\n(name,eviction-policy,tables,content-type)
+A-->-I: 201 Created\n(status=OK,message=Dataset created)
+note right of A
+    The data loaded will be validated
+    against the list of tables supplied
+    during dataset creation. In the future
+    the API will support adding new tables
+    to the dataset.\neviction-policy refers
+    to how many old versions does the service
+    have to keep before prune them out.
+    The content-type refers to the HTTP Content-Type
+    header which will be used to return individual keys.
+    Optimus doesn't make any assumption
+    on the format or content of your key values.
+end note
+
+I->+A: GET /datasets/:ds-name
+A-->-I: 200 OK (Dataset)

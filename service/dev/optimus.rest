@@ -1,0 +1,106 @@
+:url = http://localhost:8888/v1
+
+# Create dataset
+POST :url/datasets
+Content-Type: application/json
+
+{
+  "name": "recommendations",
+  "tables": [
+    "items",
+    "users"
+  ],
+  "content-type": "application/json",
+  "eviction-policy": {
+    "type": "keep-last-x-versions",
+    "versions": 10
+  }
+}
+
+# Get Datasets
+GET :url/datasets
+
+
+# Get Dataset
+GET :url/datasets/recommendations
+
+
+# Create Version
+POST :url/versions
+Content-Type: application/json
+
+{
+  "dataset": "recommendations",
+  "label": "v1-2017-01-02",
+  "verification-policy": {
+    "strategy": "count",
+    "count": 5
+  }
+}
+
+# GET Versions
+GET :url/versions?dataset=recommendations
+
+##
+:version-id = aveqnraxecbmbkvknw21njb5v
+
+# GET version
+GET :url/versions/:version-id
+
+# Load data to dataset
+POST :url/datasets/recommendations?version-id=:version-id
+Content-Type: application/json
+[
+  {
+    "table": "items",
+    "key": "key1",
+    "value": "value1"
+  },
+  {
+    "table": "items",
+    "key": "key2",
+    "value": "value2"
+  },
+  {
+    "table": "items",
+    "key": "key3",
+    "value": "value3"
+  },
+  {
+    "table": "items",
+    "key": "key4",
+    "value": "value4"
+  }
+]
+
+
+# Load data to table
+POST :url/datasets/recommendations/tables/items?version-id=:version-id
+Content-Type: application/json
+
+[{"key": "key5", "value": "value5"}]
+
+
+# SAVE Version
+POST :url/versions/:version-id/save
+
+
+# PUBLISH Version
+POST :url/versions/:version-id/publish
+
+
+# GET one
+GET :url/datasets/recommendations/tables/items/entries/key1?version-id=:version-id
+
+
+
+# GET many
+GET :url/datasets/recommendations/tables/items/entries?version-id=:version-id
+Content-Type: application/json
+
+[{"key": "key1"}, {"key": "key2"}]
+
+
+
+
+

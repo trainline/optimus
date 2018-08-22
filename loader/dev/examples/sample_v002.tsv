@@ -1,0 +1,5 @@
+item000	{"scores": [{"productId": "item001", "score": 500}, {"productId": "item002", "score":300}, {"productId": "item004", "score":200}]}
+item001	{"scores": [{"productId": "item003", "score":200}, {"productId": "item004", "score":500}]}
+item002	{"scores": [{"productId": "item001", "score": 600}, {"productId": "item003", "score":400}, {"productId": "item004", "score":500}]}
+item003	{"scores": [{"productId": "item001", "score": 600},  {"productId": "item002", "score":400}, {"productId": "item004", "score":500}]}
+item004	{"scores": [{"productId": "item001", "score": 100},  {"productId": "item002", "score":300}, {"productId": "item003", "score":700}]}

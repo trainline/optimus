@@ -1,0 +1,92 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;        ---==| M O D E L   D A T A   S T O R E   C O N F I G |==----        ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+{
+ ;; :server - HTTP Server configuration
+ :server
+ {;; :port - HTTP port to use
+  :port 8888
+  ;; :auto-reload - reloads the handler every time to make sure that any changes
+  ;; done to the code is picked up immediately while developing in the REPL.
+  ;; set to true only during development.
+  :auto-reload true}
+
+
+
+ ;; :aws - AWS configuration
+ :aws
+ {;; :region - the AWS region to be used.
+ }
+
+
+
+ ;; :async-task - configuration for the async task that handles events from the
+ ;; 'operations topic' and kicks off the corresponding operations.
+ :async-task
+ {;; :poll-interval The interval in ms in which the async task will
+  ;; poll the operations queue for new events/messages.
+  :poll-interval 5000
+  ;; :handler-fn - the call back function that handles the messages
+  ;; from the operations topic. Must be of arity 3 - the arguments
+  ;; passed will be [backend, message, extend-lease-fn]
+  :handler-fn "optimus.service.async-task/handle-message"
+  ;; :operations-topic - name of the topic that handles operation events.
+  :operations-topic "versions"}
+
+
+
+ ;; :kv-store - configuration for the data store that stores KV pairs (entries)
+ ;; :kv-store
+ ;; {;; :type - the KV implementation to use. Default is :in-memory.
+ ;;  :type :in-memory}
+
+ ;; :kv-store - configuration for the data store that stores KV pairs (entries)
+ :kv-store
+ {;; :type - the KV implementation to use. Default is :in-memory.
+  :type :dynamodb
+  :name :entries}
+
+
+
+ ;; :meta-data-store - configuration for the metadata store that stores
+ ;; information about datasets, versions etc.,
+ :meta-data-store
+ { ;; :type - The metadata store implemetnation to use. Default is :in-memory
+  :type :dynamodb
+  :name :metastore}
+
+
+
+ ;; :queue - configuration for the operations queue
+ ;; :queue
+ ;; {;; :type - the queue implementation to use.
+ ;;  :type :in-memory
+ ;;  ;; :lease-time - the lease time to set for reservations.
+ ;;  ;; After this time the reserved item, if not acknowledged,
+ ;;  ;; will be available to grant reservation to other processes.
+ ;;  :lease-time 60000}
+
+ ;; :queue - configuration for the operations queue
+ :queue
+ {:name "queue"
+  ;; :type - the queue implementation to use.
+  :type :dynamodb
+  ;; :region - the AWS region in which the table is deployed.
+  ;; :lease-time - the lease time to set for reservations.
+  ;; After this time the reserved item, if not acknowledged,
+  ;; will be available to grant reservation to other processes.
+  :lease-time 60000
+  ;; :task-queue-table the name of the table for the task-queue
+  :task-queue-table         "OptimusTasksQ"
+  ;; :reservation-index - The name of the index used for the reservation
+  ;; queries.
+  :reservation-index        "reservation-index"}
+
+
+
+ ;; :logging - Logging configuration
+ :logging
+ {:level :info}}

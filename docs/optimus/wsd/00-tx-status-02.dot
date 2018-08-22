@@ -1,0 +1,36 @@
+digraph optimus_transaction_states {
+        //rankdir=LR;
+        //size="8,5"
+        //node [shape = circle];
+        graph [label="Optimus - Version States", labelloc=t, fontsize=10];
+
+
+        B  [label="" width="0.3" shape="circle" fixedsize=true style="filled" fillcolor="black"]
+        PR [label="PREPARING"]   
+        A  [label="AWAITING_ENTRIES"]
+        SG [label="SAVING"]
+        S  [label="SAVED"]
+        PG [label="PUBLISHING"]
+        P  [label="PUBLISHED"]
+        D  [label="DISCARDED"]        
+        F  [label="FAILED" color="RED" fontcolor="RED"]
+
+        B -> PR [label="POST /versions"]
+        PR -> A [label="Preparation Succeeded"]
+        PR -> F [label="Preparation Failed" color="RED" fontcolor="RED"]
+
+        A -> F  [label="Timed out" color="RED" fontcolor="RED"]
+        A -> D  [label="POST /versions/:ver-id/discard"]
+        A -> SG [label="POST /versions/:ver-id/save"]
+        
+        SG -> S [label="Save Succeeded"]
+        SG -> F [label="Save Failed" color="RED" fontcolor="RED"]  
+
+        S -> D  [label="POST /version/:ver-id/discard"]         
+        S -> PG [label="POST /versions/:ver-id/publish"]
+                 
+        PG -> P [label="Publish Succeeded"]
+        PG -> F [label="Publish Failed" color="RED" fontcolor="RED"]
+        
+        P -> S  [label="(Another version)Publish Succeeded"]     
+}

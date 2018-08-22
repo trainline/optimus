@@ -1,0 +1,28 @@
+title Optimus - Load Data
+
+participant Initiator   as I
+participant Loader1     as L1
+participant Loader2     as L2
+participant API         as A
+
+note left of I
+    The objective of the API is to provide
+    transaction semantics for loading data
+    in a distributed fashion. Once a version
+    is created, multiple 'loaders' can push
+    data through the API using the same
+    'version'. The Initiator will then publish
+    or discard the version.
+end note
+
+I->L1: <<begin load (version)>>
+I->L2: <<begin load (version)>>
+L1->+L1: <<load>>
+L1->+A: POST /datasets/:dsname?version=:version
+A-->-L1: 201 Created
+L1->-I: <<load done>>
+
+L2->+L2: <<load>>
+L2->+A: POST /datasets/:dsname?version=:version
+A-->-L2: 201 Created
+L2->-I: <<load done>>

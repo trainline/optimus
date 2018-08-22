@@ -1,0 +1,25 @@
+title Optimus - Create Version
+
+participant Initiator   as I
+participant Loader      as L
+participant API         as A
+
+
+I->+A: POST /versions\n(label,dataset)
+A->A:  <<prepare version>>
+A-->-I: 202 Accepted (loc: /versions/:version)
+note right of A
+    The API returns 202 Accepted as long as the
+    request is valid. The API then performs
+    operations like upscaling the system inorder
+    to succesfully process the load. Clients must
+    poll the status of the version using
+    GET /versions/:version-id API to find out when
+    the API is ready to load data (AWAITING_ENTRIES).
+end note
+
+
+loop "Until Status=AWAITING_ENTRIES"
+    I->+A: GET /versions/:version
+    A-->-I: Version (version-id, status=PREPARING|AWAITING_ENTRIES)
+end

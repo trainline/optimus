@@ -1,0 +1,11 @@
+<div id="nav-wrapper">
+	<!-- Nav -->
+	<nav id="nav">
+	    <ul>
+		{% assign current = page.url | downcase | split: '/' %}
+		<li {% if current[1] == 'index.html' %}class='current'{% endif %}><a href="{{ site.baseurl }}/">Home</a></li>
+		<li {% if current[1] == 'Overview' %}class='current'{% endif %}><a href="{{ site.baseurl }}/optimus/intro">Overview</a></li>
+                <li {% if current[1] == 'code' %}class='current'{% endif %}><a href="https://github.com/trainline/optimus">Code</a></li>
+		</ul>
+	</nav>
+</div>
